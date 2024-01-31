@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Todo from '../components/Todo';
 import { db } from '../firebase';
-import { query, collection, onSnapshot } from 'firebase/firestore';
+import { query, collection, onSnapshot, updateDoc,doc} from 'firebase/firestore';
 
 const style = {
   bg: `h-screen w-screen  bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]`,
@@ -34,6 +34,14 @@ const HomePage = () => {
   },[]);
 
   // Update todo in firebase
+  const toggleComplete=async(todo)=>{
+    await updateDoc(doc(db,'todos',todo.id),{
+      completed:!todo.completed
+    })
+  }
+
+
+
   // Delete todo
   return (
     <div className={style.bg}>
@@ -48,7 +56,7 @@ const HomePage = () => {
         </form>
         <ul>
           {todos.map((todo, index) => (
-            <Todo key={index} todo={todo} />
+            <Todo key={index} todo={todo} toggleComplete={toggleComplete} />
           ))}
         </ul>
         <p className={style.count}>You have 2 todos</p>
